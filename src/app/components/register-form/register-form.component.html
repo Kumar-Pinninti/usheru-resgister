@@ -1,0 +1,40 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username:</label>
+      <input id="username" type="text" formControlName="username">
+      <div *ngIf="registrationForm.get('username')?.invalid && (registrationForm.get('username')?.dirty || registrationForm.get('username')?.touched)">
+        <small *ngIf="registrationForm.get('username')?.errors?.['required']">Username is required.</small>
+        <small *ngIf="registrationForm.get('username')?.errors?.['pattern']">Username must be lowercase, contain only letters and numbers, and be 1-20 characters long.</small>
+        <small *ngIf="registrationForm.get('username')?.errors?.['taken']">This username is already taken.</small>
+      </div>
+      <small *ngIf="isUsernameAvailable && registrationForm.get('username')?.valid">Username is available.</small>
+    </div>
+  
+    <div>
+      <label for="country">Country:</label>
+      <select id="country" formControlName="country">
+        <option value="">Select a country</option>
+        <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+      </select>
+      <div *ngIf="registrationForm.get('country')?.invalid && (registrationForm.get('country')?.dirty || registrationForm.get('country')?.touched)">
+        <small *ngIf="registrationForm.get('country')?.errors?.['required']">Country is required.</small>
+      </div>
+    </div>
+  
+    <button type="submit" [disabled]="registrationForm.invalid || !isUsernameAvailable || isSubmitting">
+      {{ isSubmitting ? 'Submitting...' : 'Register' }}
+    </button>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="showToast" class="toast-container">
+        <div class="toast-header">
+            <strong class="mr-auto">{{ toastMessage }}</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" (click)="hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</form>
